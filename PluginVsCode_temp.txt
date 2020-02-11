@@ -1,0 +1,42 @@
+Systeme de telechargement et recherche des modules de Visual Studio code :
+
+1 - Requête de la liste des plugins
+
+2 - Affichage de la  liste des plugins avec filtre par defaut (par nb de ddl)
+	- Affichage du détail d'un plugin
+
+3  - Recherche par l'utilisateur avec filtres
+
+4 - Requête de téléchargement
+	- choix de la version via lien
+
+5 - Annulation du telechargement :
+	- Efface les fichers créer/importer en cours
+
+6 - Pause du téléchargement
+
+7 - Installation automatique
+
+8 - Deinstallation
+
+9 - Activer/Désactiver un plugin 
+
+10 - Système de recommendation
+	- note
+	- nombre de téléchargements
+
+
+1 -
+Contrôle: 			Exceptions:
+# VS injection SQL => remplacer les guillemets par son caractère ASCII, par exemple
+# Boucle de query
+# utilisation de Null ou 0 => s'assurer que le cas est prévu
+
+2 -
+Idem 1
+# VS injection XSS => s'assurer que les APIs utilisées ne font que des appels sécurisés et nécessaire.
+#
+#
+
+			
+

@@ -1,6 +1,8 @@
-.idea/*
-__pycache__
-Scripts
-Lib
-logs
-Include
+.exercice 1/idea/*
+.exercice 1/__pycache__/*
+.exercice 2/idea/*
+.exercice 2/__pycache__/*
+.exercice 2/.Scripts/*
+.exercice 2/.Lib/*
+.exercice 2/.logs/*
+.exercice 2/.Include/*

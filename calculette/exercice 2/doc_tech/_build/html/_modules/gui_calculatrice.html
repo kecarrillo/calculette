@@ -1,0 +1,727 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>gui_calculatrice &#8212; Documentation Calculatrice en python v1.0: création de la doc technique</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Code du module</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Code source de gui_calculatrice</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;This program is a calculator.</span>
+
+<span class="sd">This module is the main module, where all other modules are executed.</span>
+
+<span class="sd">.. seealso:: log, cleaning, backs</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">sep</span>
+<span class="kn">from</span> <span class="nn">stat</span> <span class="kn">import</span> <span class="n">filemode</span>
+<span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Button</span><span class="p">,</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">Tk</span><span class="p">,</span> <span class="n">Entry</span><span class="p">,</span> <span class="n">StringVar</span><span class="p">,</span> <span class="n">BOTH</span><span class="p">,</span> <span class="n">LabelFrame</span><span class="p">,</span>
+                     <span class="n">messagebox</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">asin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">acos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">atan</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="nb">pow</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">sqlite3</span> <span class="kn">import</span> <span class="n">connect</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">backs.log</span> <span class="kn">import</span> <span class="n">file_log</span>
+<span class="kn">from</span> <span class="nn">backs.cleaning</span> <span class="kn">import</span> <span class="n">cleaning_folder</span>
+
+
+<span class="n">default_text</span> <span class="o">=</span> <span class="s1">&#39;Saisissez votre calcul&#39;</span>
+<span class="n">default_file</span> <span class="o">=</span> <span class="s2">&quot;Résultats&quot;</span>
+<span class="n">default_folder</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">calculate</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">list_math_operator</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sqrt&quot;</span><span class="p">,</span> <span class="s2">&quot;pow&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="s2">&quot;acos&quot;</span><span class="p">,</span> <span class="s2">&quot;tan&quot;</span><span class="p">,</span> <span class="s2">&quot;atan&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;asin&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">]</span>
+<span class="n">key_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">96</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">107</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">106</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span>
+            <span class="mi">110</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">219</span><span class="p">,</span> <span class="mi">187</span><span class="p">,</span> <span class="mi">188</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">113</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">117</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">119</span><span class="p">,</span>
+            <span class="mi">120</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">122</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
+
+
+<span class="c1"># press echap on window</span>
+<div class="viewcode-block" id="exit_calc"><a class="viewcode-back" href="../gui_calculatrice.html#gui_calculatrice.exit_calc">[docs]</a><span class="k">def</span> <span class="nf">exit_calc</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function allow the user to quit the program with the escape key.</span>
+
+<span class="sd">    It will send the data from the database to the result file.</span>
+
+<span class="sd">    :param event: Catch the escape key.</span>
+<span class="sd">    :type: object</span>
+<span class="sd">    :return: Quit the program and write the datas from the database on the result file.</span>
+<span class="sd">    :rtype: void</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">keycode</span> <span class="o">==</span> <span class="mi">27</span><span class="p">:</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">messagebox</span><span class="o">.</span><span class="n">askquestion</span><span class="p">(</span><span class="s2">&quot;Quitter?&quot;</span><span class="p">,</span> <span class="s2">&quot;En êtes-vous sûr?&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">resp</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span>
+            <span class="n">path_results</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">+</span> <span class="n">sep</span><span class="p">,</span>
+                                <span class="n">file_name</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">)</span>
+            <span class="n">use_db</span><span class="p">(</span><span class="n">req</span><span class="o">=</span><span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path_results</span><span class="p">)</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: sortie du programme.&quot;</span><span class="p">)</span>
+            <span class="n">main_screen</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="on_event"><a class="viewcode-back" href="../gui_calculatrice.html#gui_calculatrice.on_event">[docs]</a><span class="k">def</span> <span class="nf">on_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function catch and apply the key pressed by users in display screen.</span>
+
+<span class="sd">    :param event: Value of the key.</span>
+<span class="sd">    :type: object</span>
+<span class="sd">    :return: display the equation or result, and generate log.</span>
+<span class="sd">    :rtype: void</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">calculate</span>
+    <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: touche récupérée.&quot;</span><span class="p">)</span>
+    <span class="c1"># Nettoyage de l&#39;écran</span>
+    <span class="k">if</span> <span class="n">equation</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="ow">is</span> <span class="n">default_text</span><span class="p">:</span>
+        <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">kbc</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">keycode</span>
+    <span class="k">if</span> <span class="n">kbc</span> <span class="ow">in</span> <span class="n">key_list</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Succès: touche reconnue: </span><span class="si">{event.keysym}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">numbers</span> <span class="o">=</span> <span class="n">key_list</span><span class="p">[:</span><span class="mi">17</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">kbc</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+            <span class="n">calculate</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">char</span>
+            <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">188</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">13</span> <span class="ow">or</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">187</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">46</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">112</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">113</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">114</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">115</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;sqrt&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">116</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;pow&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">117</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">118</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;asin&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">119</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;cos&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">120</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;acos&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">121</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;tan&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">122</span><span class="p">:</span>
+            <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;atan&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kbc</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: suppression de la dernière entrée.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">calculate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">calculate</span> <span class="o">=</span> <span class="n">default_text</span>
+                <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Echec&quot;</span><span class="p">,</span> <span class="s2">&quot;Caractère incorrecte!&quot;</span><span class="p">)</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Echec: impossible d&#39;utiliser la touche.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Echec&quot;</span><span class="p">,</span> <span class="s2">&quot;Cette touche n&#39;est pas disponible!&quot;</span><span class="p">)</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Echec: touche non reconnue.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="b_click"><a class="viewcode-back" href="../gui_calculatrice.html#gui_calculatrice.b_click">[docs]</a><span class="k">def</span> <span class="nf">b_click</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function that catch the value from buttons.</span>
+
+<span class="sd">    :param x: Value of the button.</span>
+<span class="sd">    :type: string</span>
+<span class="sd">    :return: display the equation or result, create a database, insert result within the database and generate log.</span>
+<span class="sd">    :rtype: void</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">calculate</span>
+    <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: lancement de la phase bouton.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="s2">&quot;=&quot;</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: reconnaissance du bouton &#39;=&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">calculate</span><span class="p">))</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: calcul effectué.&quot;</span><span class="p">)</span>
+            <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: affichage du résultat.&quot;</span><span class="p">)</span>
+            <span class="n">calculate</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: réinitialisation du calcul.&quot;</span><span class="p">)</span>
+            <span class="c1"># Insert the data in the database</span>
+            <span class="n">path_result</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">file_name</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">result</span><span class="p">)</span>
+            <span class="n">use_db</span><span class="p">(</span><span class="n">req</span><span class="o">=</span><span class="s1">&#39;insert&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Echec&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot; error: </span><span class="si">{err}</span><span class="s2"> &quot;</span><span class="p">)</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Echec: Calcul impossible.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+            <span class="n">calculate</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: réinitialisation du calcul.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">is</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: reconnaissance du bouton &#39;0&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">calculate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Echec&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot; Erreur: Division par 0 impossible.&quot;</span><span class="p">)</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Echec: Calcul impossible.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">calculate</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">is</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: reconnaissance du bouton &#39;C&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">calculate</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: réinitialisation du calcul.&quot;</span><span class="p">)</span>
+        <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">default_text</span><span class="p">)</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: reinitialisation de l&#39;affichage.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">list_math_operator</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: reconnaissance du bouton.&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="s2">&quot;(&quot;</span>
+        <span class="n">calculate</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: reconnaissance du bouton.&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">calculate</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">calculate</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Echec&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot; error: </span><span class="si">{err}</span><span class="s2"> &quot;</span><span class="p">)</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Echec: Calcul impossible.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+            <span class="n">calculate</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: réinitialisation du calcul.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="path_result"><a class="viewcode-back" href="../gui_calculatrice.html#gui_calculatrice.path_result">[docs]</a><span class="k">def</span> <span class="nf">path_result</span><span class="p">(</span><span class="n">path_folder</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">final</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function that catch and get the file name and folder path to write the results.</span>
+
+<span class="sd">        :param path_folder: Path of the folder.</span>
+<span class="sd">        :type: string</span>
+<span class="sd">        :param name: Name of the file.</span>
+<span class="sd">        :type: string</span>
+<span class="sd">        :param final: Result of the user&#39;s equation.</span>
+<span class="sd">        :type: string</span>
+<span class="sd">        :return: Write the result in a file chosen by the user, and generate log.</span>
+<span class="sd">        :rtype: void</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: lancement de la phase d&#39;écriture du fichier.&quot;</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot;.txt&quot;</span>
+    <span class="n">full_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">path_folder</span> <span class="o">+</span> <span class="n">sep</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s2">&quot;nt&quot;</span><span class="p">:</span>
+            <span class="n">file_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Droits sur dossier: {filemode(path_folder)}.&quot;</span><span class="p">)</span>
+        <span class="n">makedirs</span><span class="p">(</span><span class="n">path_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création/récupération du dossier.&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w_file</span><span class="p">:</span>
+            <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***Nouveau Résultat***</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">final</span><span class="p">))</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: écriture du fichier.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Echec&quot;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Echec: erreur au moment de l&#39;écriture du fichier:</span><span class="se">\n\t</span><span class="si">{err}</span><span class="s2">&quot;</span>
+                 <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="use_db"><a class="viewcode-back" href="../gui_calculatrice.html#gui_calculatrice.use_db">[docs]</a><span class="k">def</span> <span class="nf">use_db</span><span class="p">(</span><span class="n">req</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function create a database in sqLite3 to keep the results.</span>
+
+<span class="sd">    :return: Create a database.</span>
+<span class="sd">    :rtype: void</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">default_folder</span> <span class="o">+</span> <span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;my_db.sqlite&quot;</span><span class="p">)</span>
+    <span class="n">resultats</span> <span class="o">=</span> <span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">req</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># create the table in sqLite3</span>
+        <span class="n">rslt</span> <span class="o">=</span> <span class="n">resultats</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;CREATE TABLE IF NOT EXISTS results(</span>
+<span class="s1">                        id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s1">                        result TEXT NOT NULL,</span>
+<span class="s1">                        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);&#39;&#39;&#39;</span>
+        <span class="n">rslt</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">resultats</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1"># Insert the data</span>
+        <span class="k">if</span> <span class="n">req</span> <span class="ow">is</span> <span class="s2">&quot;insert&quot;</span><span class="p">:</span>
+            <span class="n">rslt</span> <span class="o">=</span> <span class="n">resultats</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">insert</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;INSERT INTO results(result, date) </span>
+<span class="s1">                            VALUES (?, ?);&#39;&#39;&#39;</span>
+            <span class="n">rslt</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">insert</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()))</span>
+            <span class="n">resultats</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1"># Get the data and write it in the file</span>
+        <span class="k">if</span> <span class="n">req</span> <span class="ow">is</span> <span class="s2">&quot;fetch&quot;</span><span class="p">:</span>
+            <span class="n">rslt</span> <span class="o">=</span> <span class="n">resultats</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w_file</span><span class="p">:</span>
+                <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">id | &#39;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;resultats     | &#39;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+                <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;dates      | &#39;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+                <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;moment&#39;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">13</span><span class="p">))</span>
+                <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">55</span><span class="p">))</span>
+                <span class="n">rslt</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM results;&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rslt</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="p">)</span>
+                    <span class="n">rid</span><span class="p">,</span> <span class="n">rres</span><span class="p">,</span> <span class="n">rdate</span><span class="p">,</span> <span class="n">rmoment</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">rid</span> <span class="o">+=</span> <span class="s2">&quot; | &quot;</span>
+                    <span class="n">rdate</span> <span class="o">=</span> <span class="s2">&quot; | &quot;</span> <span class="o">+</span> <span class="n">rdate</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+                    <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">rid</span> <span class="o">+</span> <span class="n">rres</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="n">rdate</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+                                 <span class="o">+</span> <span class="n">rmoment</span><span class="p">)</span>
+    <span class="n">resultats</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="c1"># create main window</span>
+<span class="n">main_screen</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+<span class="n">main_screen</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Ma calculatrice python&#39;</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création de la fenêtre principale.&quot;</span><span class="p">)</span>
+<span class="n">main_screen</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Any-KeyPress&gt;&quot;</span><span class="p">,</span> <span class="n">exit_calc</span><span class="p">)</span>
+
+<span class="c1"># create main block</span>
+<span class="n">main_cadre</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">main_screen</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+                   <span class="n">borderwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">main_cadre</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">BOTH</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création du cadre principal.&quot;</span><span class="p">)</span>
+
+<span class="c1"># create display block</span>
+<span class="n">display_cadre</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">main_cadre</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">borderwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">display_cadre</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création du cadre d&#39;affichage.&quot;</span><span class="p">)</span>
+
+<span class="c1"># create buttons block</span>
+<span class="n">little_button_cadre</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">main_cadre</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">borderwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">little_button_cadre</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création du cadre de touches.&quot;</span><span class="p">)</span>
+
+<span class="c1"># create configuration block</span>
+<span class="n">entries_cadre</span> <span class="o">=</span> <span class="n">LabelFrame</span><span class="p">(</span><span class="n">main_cadre</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">borderwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                           <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Configuration du stockage des résultats&quot;</span><span class="p">)</span>
+<span class="n">entries_cadre</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création du cadre de configuration.&quot;</span><span class="p">)</span>
+
+<span class="c1"># create display screen and input</span>
+<span class="n">equation</span> <span class="o">=</span> <span class="n">StringVar</span><span class="p">()</span>
+<span class="n">expression_field</span> <span class="o">=</span> <span class="n">Entry</span><span class="p">(</span><span class="n">display_cadre</span><span class="p">,</span> <span class="n">textvariable</span><span class="o">=</span><span class="n">equation</span><span class="p">)</span>
+<span class="n">expression_field</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">ipady</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">equation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">default_text</span><span class="p">)</span>
+<span class="n">expression_field</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">font</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Courier&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">expression_field</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Any-KeyPress&gt;&quot;</span><span class="p">,</span> <span class="n">on_event</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création de la zone de saisie d&#39;affichage.&quot;</span><span class="p">)</span>
+
+<span class="c1"># create folder path input</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">StringVar</span><span class="p">()</span>
+<span class="n">folder</span> <span class="o">=</span> <span class="n">Entry</span><span class="p">(</span><span class="n">entries_cadre</span><span class="p">,</span> <span class="n">textvariable</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">file_path</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">default_folder</span><span class="p">)</span>
+<span class="n">folder</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création de la zone de saisie du dossier.&quot;</span><span class="p">)</span>
+
+<span class="c1"># create file name input</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="n">StringVar</span><span class="p">()</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">Entry</span><span class="p">(</span><span class="n">entries_cadre</span><span class="p">,</span> <span class="n">textvariable</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">file_name</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">default_file</span><span class="p">)</span>
+<span class="n">file</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création de la zone de saisie du nom du fichier.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create and link buttons</span>
+<span class="n">b_1</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">),</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b_2</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">b_3</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;3&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b_4</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;4&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;4&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b_5</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;5&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">b_6</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;6&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;6&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b_7</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;7&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;7&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b_8</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;8&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;HotPink&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">b_9</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;9&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;9&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b_0</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+             <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+             <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">),</span>
+             <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+             <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+             <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+             <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">b_coma</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b_opar</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;(&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">b_cpar</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;)&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#98DB9C&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b_add</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+               <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#00734F&quot;</span><span class="p">,</span>
+               <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">),</span>
+               <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+               <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">b_minus</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                 <span class="n">text</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+                 <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#00734F&quot;</span><span class="p">,</span>
+                 <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                 <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">),</span>
+                 <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                 <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                 <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                 <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                 <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                 <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b_multiply</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;×&quot;</span><span class="p">,</span>
+                    <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#00734F&quot;</span><span class="p">,</span>
+                    <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">),</span>
+                    <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                    <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                    <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                    <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                    <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">b_divide</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                  <span class="n">text</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">,</span>
+                  <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#00734F&quot;</span><span class="p">,</span>
+                  <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                  <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span>
+                  <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                  <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                  <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                  <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                  <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                  <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b_sqrt</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;√&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;sqrt&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">b_pow</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;^&quot;</span><span class="p">,</span>
+               <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+               <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;pow&quot;</span><span class="p">),</span>
+               <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+               <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">b_is</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+              <span class="n">text</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span>
+              <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#00734F&quot;</span><span class="p">,</span>
+              <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+              <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">),</span>
+              <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+              <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+              <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+              <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+              <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+              <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b_pi</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+              <span class="n">text</span><span class="o">=</span><span class="s2">&quot;π&quot;</span><span class="p">,</span>
+              <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#415E53&quot;</span><span class="p">,</span>
+              <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+              <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">),</span>
+              <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+              <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+              <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+              <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+              <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+              <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">b_infinite</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;∞&quot;</span><span class="p">,</span>
+                    <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#415E53&quot;</span><span class="p">,</span>
+                    <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span>
+                    <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                    <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                    <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                    <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                    <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">b_log</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Log&quot;</span><span class="p">,</span>
+               <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+               <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">),</span>
+               <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+               <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">b_sin</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Sin&quot;</span><span class="p">,</span>
+               <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+               <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">),</span>
+               <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+               <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">b_asin</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;aSin&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;asin&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">b_cos</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Cos&quot;</span><span class="p">,</span>
+               <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+               <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;cos&quot;</span><span class="p">),</span>
+               <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+               <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">b_acos</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;aCos&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;acos&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">b_tan</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+               <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Tan&quot;</span><span class="p">,</span>
+               <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+               <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;tan&quot;</span><span class="p">),</span>
+               <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+               <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+               <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+               <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">b_atan</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;aTan&quot;</span><span class="p">,</span>
+                <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#2B2E2A&quot;</span><span class="p">,</span>
+                <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;atan&quot;</span><span class="p">),</span>
+                <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">b_clear</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">little_button_cadre</span><span class="p">,</span>
+                 <span class="n">text</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span>
+                 <span class="n">bg</span><span class="o">=</span><span class="s2">&quot;#CF4024&quot;</span><span class="p">,</span>
+                 <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                 <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">b_click</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">),</span>
+                 <span class="n">activebackground</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                 <span class="n">activeforeground</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                 <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                 <span class="n">width</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
+                 <span class="n">padx</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                 <span class="n">pady</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: création des boutons.&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">use_db</span><span class="p">()</span>
+    <span class="n">main_screen</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+    <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: lancement de l&#39;interface graphique.&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cleaning_folder</span><span class="p">()</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="s2">&quot;Succès: nettoyage des log obsolètes.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Echec: nettoyage des log obsolètes:</span><span class="se">\n</span><span class="si">{e}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Code du module</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, K. CARRILLO, B2DEV.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.0.
+    </div>
+  </body>
+</html>

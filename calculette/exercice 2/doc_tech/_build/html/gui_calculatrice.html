@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>gui_calculatrice module &#8212; Documentation Calculatrice en python v1.0: création de la doc technique</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="test_sqlite3 module" href="test_sqlite3.html" />
+    <link rel="prev" title="calculatrice module" href="calculatrice.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="test_sqlite3.html" title="test_sqlite3 module"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="calculatrice.html" title="calculatrice module"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-gui_calculatrice">
+<span id="gui-calculatrice-module"></span><h1>gui_calculatrice module<a class="headerlink" href="#module-gui_calculatrice" title="Lien permanent vers ce titre">¶</a></h1>
+<p>This program is a calculator.</p>
+<p>This module is the main module, where all other modules are executed.</p>
+<div class="admonition seealso">
+<p class="admonition-title">Voir aussi</p>
+<p>log, cleaning, backs</p>
+</div>
+<dl class="function">
+<dt id="gui_calculatrice.b_click">
+<code class="sig-prename descclassname">gui_calculatrice.</code><code class="sig-name descname">b_click</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui_calculatrice.html#b_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui_calculatrice.b_click" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function that catch the value from buttons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>x</strong> – Value of the button.</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>display the equation or result, create a database, insert result within the database and generate log.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="gui_calculatrice.exit_calc">
+<code class="sig-prename descclassname">gui_calculatrice.</code><code class="sig-name descname">exit_calc</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui_calculatrice.html#exit_calc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui_calculatrice.exit_calc" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>This function allow the user to quit the program with the escape key.</p>
+<p>It will send the data from the database to the result file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>event</strong> – Catch the escape key.</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>object</p>
+</dd>
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Quit the program and write the datas from the database on the result file.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="gui_calculatrice.on_event">
+<code class="sig-prename descclassname">gui_calculatrice.</code><code class="sig-name descname">on_event</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui_calculatrice.html#on_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui_calculatrice.on_event" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>This function catch and apply the key pressed by users in display screen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>event</strong> – Value of the key.</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>object</p>
+</dd>
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>display the equation or result, and generate log.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="gui_calculatrice.path_result">
+<code class="sig-prename descclassname">gui_calculatrice.</code><code class="sig-name descname">path_result</code><span class="sig-paren">(</span><em class="sig-param">path_folder</em>, <em class="sig-param">name</em>, <em class="sig-param">final</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui_calculatrice.html#path_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui_calculatrice.path_result" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Function that catch and get the file name and folder path to write the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_folder</strong> – Path of the folder.</p></li>
+<li><p><strong>name</strong> – Name of the file.</p></li>
+<li><p><strong>final</strong> – Result of the user’s equation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Write the result in a file chosen by the user, and generate log.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="gui_calculatrice.use_db">
+<code class="sig-prename descclassname">gui_calculatrice.</code><code class="sig-name descname">use_db</code><span class="sig-paren">(</span><em class="sig-param">req=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui_calculatrice.html#use_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui_calculatrice.use_db" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>This function create a database in sqLite3 to keep the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Create a database.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="calculatrice.html"
+                        title="Chapitre précédent">calculatrice module</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="test_sqlite3.html"
+                        title="Chapitre suivant">test_sqlite3 module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/gui_calculatrice.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="test_sqlite3.html" title="test_sqlite3 module"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="calculatrice.html" title="calculatrice module"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, K. CARRILLO, B2DEV.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.0.
+    </div>
+  </body>
+</html>

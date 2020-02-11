@@ -1,0 +1,2 @@
+2020-02-11 09:10:26,255 - ERROR: Echec: nettoyage des log obsolètes:
+[WinError 32] Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus: 'C:\\Users\\LFRCAKE\\Desktop\\exercice 2\\logs\\518284_log_gui_calc-Tuesday-11-February-2020_a_09h05min04sec.log'.

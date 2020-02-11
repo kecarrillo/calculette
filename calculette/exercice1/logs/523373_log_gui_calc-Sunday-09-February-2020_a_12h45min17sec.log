@@ -1,0 +1,30 @@
+2020-02-09 12:45:17,989 - DEBUG: Succès: création de la fenêtre principale.
+2020-02-09 12:45:17,991 - DEBUG: Succès: création du cadre principal.
+2020-02-09 12:45:17,992 - DEBUG: Succès: création du cadre d'affichage.
+2020-02-09 12:45:17,992 - DEBUG: Succès: création du cadre de touches.
+2020-02-09 12:45:17,994 - DEBUG: Succès: création du cadre de configuration.
+2020-02-09 12:45:17,996 - DEBUG: Succès: création de la zone de saisie d'affichage.
+2020-02-09 12:45:17,998 - DEBUG: Succès: création de la zone de saisie du dossier.
+2020-02-09 12:45:17,999 - DEBUG: Succès: création de la zone de saisie du nom du fichier.
+2020-02-09 12:45:18,016 - DEBUG: Succès: création des boutons.
+2020-02-09 12:45:19,243 - DEBUG: Succès: lancement de la phase bouton.
+2020-02-09 12:45:19,243 - DEBUG: Succès: reconnaissance du bouton.
+2020-02-09 12:45:19,894 - DEBUG: Succès: lancement de la phase bouton.
+2020-02-09 12:45:19,894 - DEBUG: Succès: reconnaissance du bouton.
+2020-02-09 12:45:21,162 - DEBUG: Succès: lancement de la phase bouton.
+2020-02-09 12:45:21,162 - DEBUG: Succès: reconnaissance du bouton.
+2020-02-09 12:45:22,137 - DEBUG: Succès: lancement de la phase bouton.
+2020-02-09 12:45:22,138 - DEBUG: Succès: reconnaissance du bouton '='.
+2020-02-09 12:45:22,139 - DEBUG: Succès: calcul effectué.
+2020-02-09 12:45:22,140 - DEBUG: Succès: affichage du résultat.
+2020-02-09 12:45:22,140 - DEBUG: Succès: réinitialisation du calcul.
+2020-02-09 12:45:22,141 - DEBUG: Succès: lancement de la phase d'écriture du fichier.
+2020-02-09 12:45:22,142 - DEBUG: Succès: création/récupération du dossier.
+2020-02-09 12:45:22,147 - DEBUG: Succès: écriture du fichier.
+2020-02-09 12:45:23,126 - DEBUG: Succès: lancement de l'interface graphique.
+2020-02-09 12:45:23,126 - DEBUG: Succès: récupération des fichiers.
+2020-02-09 12:45:23,126 - DEBUG: Succès: récupération des fichiers.
+2020-02-09 12:45:23,141 - DEBUG: Succès: récupération des fichiers.
+2020-02-09 12:45:23,141 - DEBUG: Succès: récupération des fichiers.
+2020-02-09 12:45:23,141 - DEBUG: Succès: récupération des fichiers.
+2020-02-09 12:45:23,141 - DEBUG: Succès: nettoyage des log obsolètes.

@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>backs.log &#8212; Documentation Calculatrice en python v1.0: création de la doc technique</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Code du module</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Code source de backs.log</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;This module generate a log file.</span>
+
+<span class="sd">.. seealso:: gui_calculatrice, cleaning, backs</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">dirname</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="p">(</span><span class="n">debug</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">warning</span><span class="p">,</span> <span class="n">critical</span><span class="p">,</span> <span class="n">basicConfig</span><span class="p">,</span> <span class="n">DEBUG</span><span class="p">,</span>
+                     <span class="n">WARNING</span><span class="p">,</span> <span class="n">CRITICAL</span><span class="p">,</span> <span class="n">ERROR</span><span class="p">)</span>
+
+<span class="n">rdm</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">999_999</span><span class="p">)</span>
+<span class="n">time_run</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A-</span><span class="si">%d</span><span class="s1">-%B-%Y_a_%Hh%Mmin%Ssec&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="file_log"><a class="viewcode-back" href="../../backs.log.html#backs.log.file_log">[docs]</a><span class="k">def</span> <span class="nf">file_log</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="n">lvl</span><span class="o">=</span><span class="s1">&#39;ERROR&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function makes a log file.</span>
+
+<span class="sd">    :param message: Message to display in the log file.</span>
+<span class="sd">    :type message: string</span>
+<span class="sd">    :param warn: (Optional) Debug level of the alert to log.</span>
+<span class="sd">    :type warn: string</span>
+<span class="sd">    :param lvl: (Optional) Level of displayed alert in log file.</span>
+<span class="sd">    :type: string</span>
+<span class="sd">    :return: Message to display.</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Associate the lvl arg with the logging level</span>
+    <span class="n">level_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">:</span> <span class="n">DEBUG</span><span class="p">,</span>
+                   <span class="s1">&#39;WARNING&#39;</span><span class="p">:</span> <span class="n">WARNING</span><span class="p">,</span>
+                   <span class="s1">&#39;CRITICAL&#39;</span><span class="p">:</span> <span class="n">CRITICAL</span><span class="p">,</span>
+                   <span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">level_names</span><span class="p">[</span><span class="n">lvl</span><span class="p">]:</span>  <span class="c1"># with appropriate arg</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">level_names</span><span class="p">[</span><span class="n">lvl</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if wrong arg</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">DEBUG</span>
+    <span class="n">log_folder</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">abspath</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;logs&quot;</span><span class="p">)</span>
+    <span class="n">makedirs</span><span class="p">(</span><span class="n">log_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Config of the log file.</span>
+    <span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">join</span><span class="p">(</span><span class="n">log_folder</span> <span class="o">+</span> <span class="n">sep</span><span class="p">,</span>
+                              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{rdm}</span><span class="s1">_log_gui_calc-</span><span class="si">{time_run}</span><span class="s1">.log&#39;</span><span class="p">),</span>
+                <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+                <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">warn</span> <span class="ow">is</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span>  <span class="c1"># information</span>
+        <span class="n">debug</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">warn</span> <span class="ow">is</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span>  <span class="c1"># error</span>
+        <span class="n">error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">warn</span> <span class="ow">is</span> <span class="s1">&#39;warning&#39;</span><span class="p">:</span>  <span class="c1"># warning</span>
+        <span class="n">warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">warn</span> <span class="ow">is</span> <span class="s1">&#39;critical&#39;</span><span class="p">:</span>  <span class="c1"># critical error (end of the execution)</span>
+        <span class="n">critical</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Bad use of the log function</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Le paramètre alerte passé à la fonction log() est &#39;</span> \
+                  <span class="sa">f</span><span class="s1">&#39;incorrecte !</span><span class="se">\n</span><span class="s1">L</span><span class="se">\&#39;</span><span class="s1">ancien message était: &quot;</span><span class="si">{message}</span><span class="s1">&quot;.</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                  <span class="sa">f</span><span class="s1">&#39;L</span><span class="se">\&#39;</span><span class="s1">ancien niveau d</span><span class="se">\&#39;</span><span class="s1">alerte était: &quot;</span><span class="si">{warn}</span><span class="s1">&quot;.&#39;</span>
+        <span class="n">file_log</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">message</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Code du module</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, K. CARRILLO, B2DEV.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.0.
+    </div>
+  </body>
+</html>

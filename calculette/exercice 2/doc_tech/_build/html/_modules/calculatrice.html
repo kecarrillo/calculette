@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>calculatrice &#8212; Documentation Calculatrice en python v1.0: création de la doc technique</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Code du module</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Code source de calculatrice</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Calculatrice en python.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="log"><a class="viewcode-back" href="../calculatrice.html#calculatrice.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">alerte</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">lvl</span><span class="o">=</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function makes a log file.</span>
+
+<span class="sd">    :param alerte: Debug level of the alert to log.</span>
+<span class="sd">    :type alerte: string</span>
+<span class="sd">    :param message: Message to display in the log file.</span>
+<span class="sd">    :type message: string</span>
+<span class="sd">    :param lvl: (Optional) Level of displayed alert in log file.</span>
+<span class="sd">    :type: string</span>
+<span class="sd">    :return: Message to display.</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="p">(</span><span class="n">debug</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">warning</span><span class="p">,</span> <span class="n">critical</span><span class="p">,</span> <span class="n">basicConfig</span><span class="p">,</span>
+                         <span class="n">DEBUG</span><span class="p">,</span> <span class="n">WARNING</span><span class="p">,</span> <span class="n">CRITICAL</span><span class="p">,</span> <span class="n">ERROR</span><span class="p">)</span>
+
+    <span class="c1"># Associate the lvl arg with the logging level</span>
+    <span class="n">level_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">:</span> <span class="n">DEBUG</span><span class="p">,</span>
+                   <span class="s1">&#39;WARNING&#39;</span><span class="p">:</span> <span class="n">WARNING</span><span class="p">,</span>
+                   <span class="s1">&#39;CRITICAL&#39;</span><span class="p">:</span> <span class="n">CRITICAL</span><span class="p">,</span>
+                   <span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">level_names</span><span class="p">[</span><span class="n">lvl</span><span class="p">]:</span>  <span class="c1"># with appropriate arg</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">level_names</span><span class="p">[</span><span class="n">lvl</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if wrong arg</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">DEBUG</span>
+
+    <span class="c1"># Config of the log file.</span>
+    <span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;log_calculatrice.log&#39;</span><span class="p">,</span>
+                <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+                <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alerte</span> <span class="ow">is</span> <span class="s1">&#39;debug&#39;</span><span class="p">:</span>  <span class="c1"># information</span>
+        <span class="n">debug</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">elif</span> <span class="n">alerte</span> <span class="ow">is</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span>  <span class="c1"># error</span>
+        <span class="n">error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">alerte</span> <span class="ow">is</span> <span class="s1">&#39;warning&#39;</span><span class="p">:</span>  <span class="c1"># warning</span>
+        <span class="n">warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">alerte</span> <span class="ow">is</span> <span class="s1">&#39;critical&#39;</span><span class="p">:</span>  <span class="c1"># critical error (end of the execution)</span>
+        <span class="n">critical</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Bad use of the log function</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Le paramètre alerte passé à la fonction log() est &#39;</span> \
+                  <span class="sa">f</span><span class="s1">&#39;incorrecte !</span><span class="se">\n</span><span class="s1">L</span><span class="se">\&#39;</span><span class="s1">ancien message était: &quot;</span><span class="si">{message}</span><span class="s1">&quot;.</span><span class="se">\n</span><span class="s1">&#39;</span>\
+                  <span class="sa">f</span><span class="s1">&#39;L</span><span class="se">\&#39;</span><span class="s1">ancien niveau d</span><span class="se">\&#39;</span><span class="s1">alerte était: &quot;</span><span class="si">{alerte}</span><span class="s1">&quot;.&#39;</span>
+        <span class="n">alerte</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span>
+        <span class="n">log</span><span class="p">(</span><span class="n">alerte</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="recuperation_saisie"><a class="viewcode-back" href="../calculatrice.html#calculatrice.recuperation_saisie">[docs]</a><span class="k">def</span> <span class="nf">recuperation_saisie</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This function return the result from user&#39;s operation.</span>
+
+<span class="sd">    :result: The result from the user&#39;s operation.</span>
+<span class="sd">    :rtype: float or integer</span>
+
+<span class="sd">    :example:</span>
+
+<span class="sd">    &gt;&gt;&gt; recuperation_saisie()</span>
+<span class="sd">    Saisissez votre calcul:</span>
+<span class="sd">    &gt;&gt;&gt; 5*5</span>
+<span class="sd">    25</span>
+
+<span class="sd">    .. seealso:: main()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Saisissez votre calcul:&quot;</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Success: catching user</span><span class="se">\&#39;</span><span class="s1">s input and calculate &#39;</span>
+                     <span class="sa">f</span><span class="s1">&#39;it: &quot;</span><span class="si">{result}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Erreur:</span><span class="si">{e}</span><span class="s1">&#39;</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">recuperation_saisie</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="fichier"><a class="viewcode-back" href="../calculatrice.html#calculatrice.fichier">[docs]</a><span class="k">def</span> <span class="nf">fichier</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function create a file and a folder the user can choose and write</span>
+<span class="sd">    the result in this file.</span>
+
+<span class="sd">    :param result: Result from the function reciperation_saisie().</span>
+<span class="sd">    :type: float or integer.</span>
+<span class="sd">    :return: Result within a file.</span>
+<span class="sd">    :rtype: Object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span><span class="p">,</span> <span class="n">sep</span>
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="n">join</span>
+
+    <span class="n">local_path</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">folder_path</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Où désirez-vous stocker votre fichier de résultat? </span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;(Saisir None pour conserver l&#39;emplacement du fichier&quot;</span>
+                        <span class="s2">&quot; à l&#39;emplacement du script)&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">folder_path</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">local_path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">makedirs</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Success: folder: </span><span class="si">{folder_path}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+    <span class="n">file_name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Comment souhaitez-vous nommer votre fichier?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                      <span class="s2">&quot;(Ou quel fichier souhaitez vous complèter?)&quot;</span><span class="p">)</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+    <span class="n">log</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Success: name of the file: </span><span class="si">{file_name}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Récupération du chemin complet du fichier à complèter ou créer:</span>
+    <span class="n">full_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">+</span> <span class="n">sep</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">decor</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="s1">&#39;*&#39;</span>
+        <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;END&#39;</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w_file</span><span class="p">:</span>
+            <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">decor</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">separator</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">w_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">decor</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Votre fichier se trouve à l&#39;emplacement suivant:</span><span class="si">{full_path}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Success: result added in the file.&#39;</span><span class="p">)</span>
+    <span class="c1"># En cas d&#39;erreur:</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Error: impossible to add the result in the file: </span><span class="si">{e}</span><span class="s1">.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../calculatrice.html#calculatrice.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This function run the differents functions of the script.</span>
+
+<span class="sd">    :return: The file with the result of the user&#39;s operation.</span>
+<span class="sd">    :rtype: Object.</span>
+
+<span class="sd">    .. seealso:: recuperation_saisie(), fichier().</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fichier</span><span class="p">(</span><span class="n">recuperation_saisie</span><span class="p">())</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Calculatrice en python v1.0: création de la doc technique</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Code du module</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, K. CARRILLO, B2DEV.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.0.
+    </div>
+  </body>
+</html>

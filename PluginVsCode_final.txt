@@ -1,0 +1,95 @@
+Systeme de telechargement et recherche des modules de Visual Studio code :
+
+1 - Requête de la liste des plugins
+
+2 - Affichage de la  liste des plugins avec filtre par defaut (par nb de ddl)
+	- Affichage du détail d'un plugin
+
+3  - Recherche par l'utilisateur avec filtres
+
+4 - Requête de téléchargement
+	- choix de la version via lien
+
+5 - Annulation du telechargement :
+	- Efface les fichers créer/importer en cours
+
+6 - Pause du téléchargement
+
+7 - Installation automatique
+
+8 - Deinstallation
+
+9 - Activer/Désactiver un plugin 
+
+10 - Système de recommendation
+	- note
+	- nombre de téléchargements
+
+
+1 -
+Contrôle: 			Exceptions:
+# Peut on modifier le code source pour modifier son comportement
+# Peut il gérer les requete avec enormement de resultats?
+# Peut il gérerle cas ou il n'y a pas de resultats
+
+2 -
+Idem 1
+# VS injection XSS => s'assurer que les APIs utilisées ne font que des appels sécurisés et nécessaire.
+# Nombre de retour extrêmement important
+# Aucun retour
+# Filtres sur mots clés et images(contenus raciste, sexiste, ...) => Plutôt sur l'upload
+# Filtres sur plagiats => Plutôt sur l'upload
+# Titre et descriptif de plugin avec nombre de caractère immense (+ 1000 lignes)
+
+3-
+Contrôle: 			Exceptions:
+# VS injection SQL => remplacer les guillemets par son caractère ASCII, par exemple
+# Boucle de query
+# utilisation de Null ou 0 => s'assurer que le cas est prévu
+# Terme de requête très générique sur énorme table => Recherche à partir d'un nombre minimum de caractères
+
+4-
+# Test avec robots
+# Cas de lien invalide
+# 
+
+5-
+# Résidus?
+# En cas de dependances?
+# Si plusieurs annulations?
+# Si en cas de ddl?
+
+6-
+# Reprise du ddl? Que se passe t il?
+# Si en pause, et coupure du poste, que se passe t il?
+# Si en pause et retelechargement du même fichier, que se passe t il?
+
+7-
+# Fichier corrompu
+# Même plugin
+# Si l'IDE est coupé en cours d'installation
+# Si tâche effectuée pendant installation
+# Si plusieurs plugin en cours d'installation
+# Si annulation d'installation
+# S'il est incompatible (OS, autre plugin)
+# Test installation + desinstallation
+
+8-
+# Si annulation
+# Plusieurs desinstallation
+# Tache effectuée en même temps
+# IDE eteint
+# Test installation + desinstallation
+# Résidus?
+
+9-
+# Si appel au plugin
+# Si dependance
+# Après reboot poste et IDE
+# Si IDE qui crash
+
+10-
+# Un utilisateur peut-il télécharger/desinstaller plusieurs fois le même plugin? Que se passe t il?
+# Un utilisateur peut il voter? Que se passe t il?
+# En cas d'annulation du ddl?
+

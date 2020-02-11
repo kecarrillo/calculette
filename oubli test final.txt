@@ -1,0 +1,8 @@
+
+Verification des doublons des documents/des sous-themes:
+	- Vérifier l'existence d'un doublon uniquement dans le theme/ le sous-theme concerné et non de façon générale
+	
+Verification de la validité d'un formulaire
+	- Vérifier si les données entrées dans les champs avant la validation sont gardées en mémoire même si le formulaire n'aboutit pas
+	
+++ -> Test du cas de bon fonctionnement et pas seulement des echecs

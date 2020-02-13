@@ -1,0 +1,18 @@
+﻿Temps d'execution des fonctions:
+
+Alexis 33.65s
+Thomas 28.28s
+Jeremy 16.55s
+Kevin 67.21s
+PierreJean 30.24s
+Opti de Kevin 18.95s
+
+insertionJerem: 6.40s
+
+Optimisation de la fonction la plus lente:
+
+De base, le temps d'execution de la fonction bubble est d'environ 67.21 secondes.
+
+Après transformation de la boucle avec for et range plutôt que while, temps d'execution: environ 50 secondes.
+
+Enfin, après avoir transformé les éléments de ma liste en integer avant de travailler avec, mon temps d'execution passe à 18.95 secondes.

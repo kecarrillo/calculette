@@ -1,8 +1,5 @@
-# Création du dictionnaire d'entrée
-# CALC_GR = {"<DIGIT>": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-#            "<OPERATOR>": ["+", "*", "/", "-", "%"],
-#            "<SEPARATOR>": ["(", ")", ".", "-"]}
-
+# coding=utf-8
+# Creation du dictionnaire d'entrée
 
 EXPR_GRAMMAR = {
     "<start>":
@@ -21,7 +18,7 @@ EXPR_GRAMMAR = {
          "<integer>.<integer>",
          "<integer>"],
 
-    "<OPERATOR>":
+    "<operator>":
         ["+", "*", "/", "-", "%"],
 
     "<integer>":
